@@ -1,10 +1,16 @@
 #include <iostream>
+#include <dlist.hpp>
 
 using namespace std;
 
 int main()
 {
-    cout << "Hello World!" << endl;
+
+    dlist<int> k(1);
+    k.emplace(2);
+    k.emplace(2);
+    k.emplace(2);
+
     return 0;
 }
 
