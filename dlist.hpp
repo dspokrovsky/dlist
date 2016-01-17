@@ -38,6 +38,8 @@ public:
 
     T data;
 
+    unsigned int index;
+
 private:
     dlist* ptr_next = NULL;
     dlist* ptr_prev = NULL;
