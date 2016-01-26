@@ -1,26 +1,51 @@
 #include <iostream>
-//#include <dlist.hpp>
-#include <dlist_easy.hpp>
-
+#include <dlist.hpp>
+//#include <dlist_easy.hpp>
+#include "string"
 using namespace std;
 
 int main()
 {
+    struct T{
+        string book;
+        string fio;
+        bool operator==(const T& dt2)
+        {
+            return (this->book == dt2.book);
+        }
+        bool operator!=(const T& dt2){
+            return (this->book != dt2.book);
+        }
+        ostream& operator<<(ostream & os){
+            os << this->book << "  " << this->fio <<endl;
+            return os;
+        }
+    };
 
-    //dlist<int> k(1);
-    dlist_easy<int> k;
-    for(int i = 0; i < 10; i ++){
-        k.emplace(k.end(),i);
-    }
-    auto p = k.end();
-   // p++;
-    //k.insert_before(p, 10);
-    k.insert_after(p, 30);
 
 
-    for(auto i=k.begin(); i != k.end(); i ++){
-        cout << *i<<std::endl;
-    }
+    struct T a;
+    a.book = "first";
+    a.fio = "fir";
+
+    dlist<T> k(a);
+    cout << a;
+
+    /*
+    k.insert_after(1,2);
+    k.insert_after(1,2);
+    k.insert_after(10,3);
+    k.dlist_print();
+    cout << " ***** "<<endl;
+
+    dlist<int>* cop_k;
+    cop_k = k.copy();
+    cop_k->dlist_print();
+    cout << " *****gogog "<<endl;
+    dlist<int>* cop_k2;
+    cop_k2 = combine(cop_k,cop_k);
+    cop_k2->dlist_print();
+*/
 
     return 0;
 }
