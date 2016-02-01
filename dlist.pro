@@ -7,6 +7,6 @@ QMAKE_CXXFLAGS -= -std=c++14
 SOURCES += main.cpp
 
 HEADERS += \
-    dlist.hpp \
-    dlist_easy.hpp
+    books.hpp \
+    list.hpp
 

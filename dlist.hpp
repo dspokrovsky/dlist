@@ -11,11 +11,16 @@ public:
     {
         ptr_next = this;
         ptr_prev = this;
-
+    }
+    dlist()
+    {
+        ptr_next = NULL;
+        ptr_prev = NULL;
     }
 
 
     ~dlist(){
+
     }
 
     T& data(){
@@ -25,7 +30,8 @@ public:
         return data_;
     }
 
-    void dlist_print(){
+
+    void print(){
         dlist* buf = this;
         std::cout << buf->data()<< std::endl;
         while(buf->ptr_next != this){
@@ -93,7 +99,7 @@ public:
             buf= buf->ptr_next;
         }
         dlist* buf2 = buf->ptr_next;
-        dlist zd = new dlist(dt);
+        dlist* zd = new dlist(dt);
         buf->ptr_next = zd;
         zd->ptr_next = buf2;
         zd->ptr_prev = buf;
