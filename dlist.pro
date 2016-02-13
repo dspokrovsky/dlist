@@ -9,4 +9,3 @@ SOURCES += main.cpp
 HEADERS += \
     books.hpp \
     list.hpp
-

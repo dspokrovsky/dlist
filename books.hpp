@@ -5,6 +5,7 @@
 
 
 using namespace std;
+
 struct Book{
     string book;
     string fio;

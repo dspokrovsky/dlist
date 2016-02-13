@@ -1,19 +1,23 @@
 #ifndef LIST_HPP
 #define LIST_HPP
+
 #include <iostream>
 namespace dlist {
 
     template<typename T>
     class el{
     public:
-        el(const T& dt): data(dt){
-
+        el(const T& dt)/*: data(dt)*/{
+            data = new T(dt);
+        }
+        ~el(){
+            delete data;
         }
 
         el* next = NULL;
         el* prev = NULL;
 
-        T data;
+        T* data;
         void operator= (const el<T>& dt){
             this->next = dt.next;
             this->prev = dt.prev;
@@ -30,14 +34,18 @@ namespace dlist {
             head_ = NULL;
             count_ = 0;
         }
+        list(const T& dt)
+        {
+            insert(head_, dt);
+        }
 
         list(list& other){
             if(other.head() != NULL){
-                this->insert(other.head(),other.head()->data);
+                this->insert(other.head(),*other.head()->data);
                 auto buf = other.head()->next;
                 el<T>* buf2 = this->head();
                 while(buf != other.head()){
-                    this->insert(buf2,buf->data);
+                    this->insert(buf2,*buf->data);
                     buf = buf->next;
                     buf2 = buf2->next;
                 }
@@ -47,19 +55,28 @@ namespace dlist {
         }
 
         ~list(){
-            el<T>* buf = head_;
-            el<T>* buf2;
-            for( std::size_t  i  = 0; i < count_; i ++ ){
-                buf2 = buf->next;
+            if(head_!=NULL){
+                el<T>* buf = head_;
+                el<T>* buf2;
+                while(buf->next!=head_){
+                    buf2 = buf;
+                    buf = buf->next;
+                    delete buf2;
+                }
                 delete buf;
-                buf = buf2;
+                head_ = NULL;
             }
+
+        }
+        void print(){
+            auto buf = head_;
+            while(buf->next!= head_){
+                cout << *buf->data<< endl;
+                buf = buf->next;
+            }
+            cout << *buf->data<< endl;
         }
 
-        /*void insert(const std::size_t& pos, const T& dt){
-
-        }*/
-        //void insert(const std::size_t& pos, const T& dt);
 
         //вставка элемента по указателю, если вставка не удалась, то вернет -1
         int insert(el<T>* ptr, const T& dt){
@@ -71,7 +88,7 @@ namespace dlist {
                 return 0;
             }
             el<T>* buf = head_;
-            for( auto i = 0; i <= count_; i ++){
+            for( size_t i = 0; i <= count_; i ++){
                 if(buf == ptr){
                     break;
                 }else{
@@ -104,10 +121,10 @@ namespace dlist {
         }
 
         el<T>* find(const T& dt){
-            if(head_->data == dt) return head_;
+            if(*head_->data == dt) return head_;
             el<T>* buf = head_->next;
             while(buf != head_){
-                if (dt == buf->data) return buf;
+                if (dt == *buf->data) return buf;
                 buf = buf->next;
             }
             return NULL;
@@ -134,8 +151,16 @@ namespace dlist {
             }
         }
 
-        list merge(list& other){
-
+        bool merge(el<T>*ptr, list& other){
+            if (check_ptr(ptr)) return false;
+            if (other.head()==NULL) return false;
+            ptr->next->prev =other.head()->prev;
+            other.head()->prev->next = ptr->next;
+            ptr->next = other.head();
+            other.head()->prev = ptr;
+            this->count_ += other.count_;
+            other.head_ = NULL;
+            return true;
         }
         //делит текущий кольцевой список на 2 списка,
         //если указатели указаны не верно = возвращает пустой список
@@ -190,6 +215,16 @@ namespace dlist {
         }
 
 private:
+
+        bool check_ptr(el<T>* ptr){
+            auto buf = this->head()->next;
+            while( buf != this->head()){
+                if (buf == ptr) return true;
+                buf = buf->next;
+            }
+            return false;
+        }
+
         el<T>* head_ = NULL;
         std::size_t count_ = 0;
 
