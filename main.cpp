@@ -25,7 +25,7 @@ int main()
     boom->insert(boom->head(),a);
     boom->print();
 
-    delete boom;
+
 
     boom->print();
     {
@@ -37,7 +37,13 @@ int main()
     k.insert(k.find(3),4);
     k.insert_before(k.find(4),5);
 
+   // cout << "bla";
+
     k.print();
+
+
+
+
 
     dlist::list<int> k2(k);
 
@@ -49,8 +55,11 @@ int main()
 
     delete ptr;
 
+    cout <<"now "<< k.get(6);
 
     }
+
+
 
 
 

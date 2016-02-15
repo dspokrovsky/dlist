@@ -7,15 +7,16 @@ namespace dlist {
     template<typename T>
     class el{
     public:
-        el(const T& dt)/*: data(dt)*/{
+        el(const T& dt){
             data = new T(dt);
         }
         ~el(){
             delete data;
+            data = nullptr;
         }
 
-        el* next = NULL;
-        el* prev = NULL;
+        el* next = nullptr;
+        el* prev = nullptr;
 
         T* data;
         void operator= (const el<T>& dt){
@@ -31,7 +32,7 @@ namespace dlist {
     {
     public:
         list(){
-            head_ = NULL;
+            head_ = nullptr;
             count_ = 0;
         }
         list(const T& dt)
@@ -40,7 +41,7 @@ namespace dlist {
         }
 
         list(list& other){
-            if(other.head() != NULL){
+            if(other.head() != nullptr){
                 this->insert(other.head(),*other.head()->data);
                 auto buf = other.head()->next;
                 el<T>* buf2 = this->head();
@@ -55,7 +56,7 @@ namespace dlist {
         }
 
         ~list(){
-            if(head_!=NULL){
+            if(head_!=nullptr){
                 el<T>* buf = head_;
                 el<T>* buf2;
                 while(buf->next!=head_){
@@ -64,7 +65,7 @@ namespace dlist {
                     delete buf2;
                 }
                 delete buf;
-                head_ = NULL;
+                head_ = nullptr;
             }
 
         }
@@ -80,7 +81,7 @@ namespace dlist {
 
         //вставка элемента по указателю, если вставка не удалась, то вернет -1
         int insert(el<T>* ptr, const T& dt){
-            if ( head_ == NULL){
+            if ( head_ == nullptr){
                 head_ = new el<T>(dt);
                 head_->prev = head_;
                 head_->next = head_;
@@ -109,15 +110,18 @@ namespace dlist {
             insert(ptr->prev, dt);
         }
 
-        T& get(std::size_t index){
+        T& get(int index){
             el<T>* buf = head_;
-            for(std::size_t i =0; i < index; i ++){
-                buf++;
+            while (index!=0){
+                buf = buf->next;
+                index--;
             }
-            return buf->data;
+
+
+            return *buf->data;
         }
         T& get(el<T>* ptr){
-            return ptr->data;
+            return *ptr->data;
         }
 
         el<T>* find(const T& dt){
@@ -127,26 +131,23 @@ namespace dlist {
                 if (dt == *buf->data) return buf;
                 buf = buf->next;
             }
-            return NULL;
+            return nullptr;
         }
 
         void remove(const T& dt){
             el<T>* del = find(dt);
-            if (del !=NULL && del != head_) {
+            if (del !=nullptr && del != head_) {
                 del->prev->next = del->next;
                 del->next->prev = del->prev;
                 count_--;
                 delete del;
             }else{
-                if(del == NULL){
-                }else{
-                    if (del == head_){
-                        del->prev->next = del->next;
-                        del->next->prev = del->prev;
-                        head_ = head_->next;
-                        delete del;
-                        count_--;
-                    }
+                if (del == head_){
+                    del->prev->next = del->next;
+                    del->next->prev = del->prev;
+                    head_ = head_->next;
+                    delete del;
+                    count_--;
                 }
             }
         }
@@ -160,7 +161,7 @@ namespace dlist {
             other.head()->prev = ptr;
             this->count_ += other.count_;
             other.head_ = NULL;
-            return true;
+            return true;/*: data(dt)*/
         }
         //делит текущий кольцевой список на 2 списка,
         //если указатели указаны не верно = возвращает пустой список
